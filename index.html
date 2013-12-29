@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>D3 Examples - Scrolling Line Chart</title>
+    <script type="text/javascript" src="assets/js/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="assets/js/d3.v3.min.js"></script>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css" media="screen" />
+    <script type="text/javascript">
+      $(document).ready(function() {
+          /* handle charting */
+          chart_dataset = [1, 4, 3, 2, 5, 6, 3, 5, 7, 8, 4]
+          var w = 300;
+          var h = 150;
+          var max = d3.max(chart_dataset);
+          var padding = 10;
+
+          var x = d3.scale.linear()
+              .domain([0, chart_dataset.length - 1]).range([0 + padding, w - padding * 2]);
+
+          var y = d3.scale.linear()
+              .domain([0, max]).range([h - padding, 0 + padding * 2]);
+
+          var line = d3.svg.line()
+              .x(function(d, i) { return x(i); })
+              .y(function(d) { return y(d); });
+
+          vis = d3.select("div#chart-scores").append("svg:svg").attr("width", w).attr("height", h);
+
+          vis.selectAll("path.line").data([chart_dataset]).enter().append("svg:path")
+              .attr("d", line);
+
+          vis.selectAll("circle").data(chart_dataset).enter().append("svg:circle")
+              .attr("cx", function(d, i) { return x(i); })
+              .attr("cy", function(d) { return y(d); })
+              .attr("r", 5);
+
+          vis.selectAll("text").data(chart_dataset).enter().append("svg:text")
+              .text(function(d) { return d; })
+              .attr("x", function(d, i) { return x(i) - 7; })
+              .attr("y", function(d) { return y(d) - 7; });
+      });
+    </script>
+    <style type="text/css" media="screen">
+        #chart-scores {
+            margin-top: 30px;
+        }
+
+        #chart-scores path {
+            fill: none;
+            stroke: black;
+            stroke-width: 2;
+        }
+
+        #chart-scores circle {
+            fill: #ccc;
+            stroke: black;
+            stroke-width: 2;
+        }
+
+        #chart-scores text {
+            font-size: 11px;
+        }
+    </style>
+  </head>
+  <body>
+    <header class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <div class="navbar-header" >
+          <a class="navbar-brand" href="/">D3 Examples</a>
+        </div>
+      </div>
+    </header>
+    <div class="container">
+      <section>
+        <div class="row">
+          <h1>Line Chart</h1>
+
+          <div id="chart-scores"></div>
+        </div>
+      </section>
+    </div>
+
+  </body>
+</html>
